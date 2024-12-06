@@ -1,0 +1,13 @@
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\bin\Debug\Final_AdvanceTech.exe.config
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\bin\Debug\Final_AdvanceTech.exe
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\bin\Debug\Final_AdvanceTech.pdb
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\obj\Debug\Final_AdvanceTech.csproj.AssemblyReference.cache
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\obj\Debug\Final_AdvanceTech.LoginForm.resources
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\obj\Debug\Final_AdvanceTech.Properties.Resources.resources
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\obj\Debug\Final_AdvanceTech.TableService.resources
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\obj\Debug\Final_AdvanceTech.csproj.GenerateResource.cache
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\obj\Debug\Final_AdvanceTech.csproj.CoreCompileInputs.cache
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\obj\Debug\Final_AdvanceTech.exe
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\obj\Debug\Final_AdvanceTech.pdb
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\obj\Debug\Final_AdvanceTech.Payment_And_Billing.resources
+C:\coding\ChatGPT\Final_AdvanceTech\Final_AdvanceTech\obj\Debug\Final_AdvanceTech.Inventory.resources
