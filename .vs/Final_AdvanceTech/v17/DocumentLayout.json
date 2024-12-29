@@ -1,26 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\coding\\ChatGPT\\Final_AdvanceTech\\",
+  "WorkspaceRootPath": "C:\\Users\\ADMIN\\source\\repos\\Final_AdvanceTech\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|c:\\coding\\chatgpt\\final_advancetech\\final_advancetech\\kitchenform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|solutionrelative:final_advancetech\\kitchenform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|c:\\coding\\chatgpt\\final_advancetech\\final_advancetech\\tableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|solutionrelative:final_advancetech\\tableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|c:\\coding\\chatgpt\\final_advancetech\\final_advancetech\\tableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|c:\\users\\admin\\source\\repos\\final_advancetech\\final_advancetech\\tableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|solutionrelative:final_advancetech\\tableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|c:\\coding\\chatgpt\\final_advancetech\\final_advancetech\\kitchenform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|solutionrelative:final_advancetech\\kitchenform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|C:\\Users\\ADMIN\\source\\repos\\Final_AdvanceTech\\final_advancetech\\tableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|solutionrelative:final_advancetech\\tableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|c:\\coding\\chatgpt\\final_advancetech\\final_advancetech\\inventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|solutionrelative:final_advancetech\\inventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|C:\\Users\\ADMIN\\source\\repos\\Final_AdvanceTech\\final_advancetech\\models\\orders.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7D7F7C63-FA1A-43A6-B4D0-5C8962FFAE0C}|Final_AdvanceTech\\Final_AdvanceTech.csproj|solutionrelative:final_advancetech\\models\\orders.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,69 +22,47 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "TableService.cs",
-              "DocumentMoniker": "C:\\coding\\ChatGPT\\Final_AdvanceTech\\Final_AdvanceTech\\TableService.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\Final_AdvanceTech\\Final_AdvanceTech\\TableService.cs",
               "RelativeDocumentMoniker": "Final_AdvanceTech\\TableService.cs",
-              "ToolTip": "C:\\coding\\ChatGPT\\Final_AdvanceTech\\Final_AdvanceTech\\TableService.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\Final_AdvanceTech\\Final_AdvanceTech\\TableService.cs",
               "RelativeToolTip": "Final_AdvanceTech\\TableService.cs",
-              "ViewState": "AgIAAHUAAAAAAAAAAIA3wJAAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAMwAAAAAAAAAAAAAANUAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T09:15:51.983Z",
+              "WhenOpened": "2024-12-29T03:35:36.876Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "TableService.cs [Design]",
-              "DocumentMoniker": "C:\\coding\\ChatGPT\\Final_AdvanceTech\\Final_AdvanceTech\\TableService.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\Final_AdvanceTech\\Final_AdvanceTech\\TableService.cs",
               "RelativeDocumentMoniker": "Final_AdvanceTech\\TableService.cs",
-              "ToolTip": "C:\\coding\\ChatGPT\\Final_AdvanceTech\\Final_AdvanceTech\\TableService.cs [Design]",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\Final_AdvanceTech\\Final_AdvanceTech\\TableService.cs [Design]",
               "RelativeToolTip": "Final_AdvanceTech\\TableService.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T09:15:49.862Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2024-12-29T03:35:23.884Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "KitchenForm.cs",
-              "DocumentMoniker": "C:\\coding\\ChatGPT\\Final_AdvanceTech\\Final_AdvanceTech\\KitchenForm.cs",
-              "RelativeDocumentMoniker": "Final_AdvanceTech\\KitchenForm.cs",
-              "ToolTip": "C:\\coding\\ChatGPT\\Final_AdvanceTech\\Final_AdvanceTech\\KitchenForm.cs",
-              "RelativeToolTip": "Final_AdvanceTech\\KitchenForm.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAArAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "Orders.cs",
+              "DocumentMoniker": "C:\\Users\\ADMIN\\source\\repos\\Final_AdvanceTech\\Final_AdvanceTech\\Models\\Orders.cs",
+              "RelativeDocumentMoniker": "Final_AdvanceTech\\Models\\Orders.cs",
+              "ToolTip": "C:\\Users\\ADMIN\\source\\repos\\Final_AdvanceTech\\Final_AdvanceTech\\Models\\Orders.cs",
+              "RelativeToolTip": "Final_AdvanceTech\\Models\\Orders.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T09:14:40.23Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "KitchenForm.cs [Design]",
-              "DocumentMoniker": "C:\\coding\\ChatGPT\\Final_AdvanceTech\\Final_AdvanceTech\\KitchenForm.cs",
-              "RelativeDocumentMoniker": "Final_AdvanceTech\\KitchenForm.cs",
-              "ToolTip": "C:\\coding\\ChatGPT\\Final_AdvanceTech\\Final_AdvanceTech\\KitchenForm.cs [Design]",
-              "RelativeToolTip": "Final_AdvanceTech\\KitchenForm.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T09:11:13.033Z",
-              "EditorCaption": " [Design]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Inventory.cs [Design]",
-              "DocumentMoniker": "C:\\coding\\ChatGPT\\Final_AdvanceTech\\Final_AdvanceTech\\Inventory.cs",
-              "RelativeDocumentMoniker": "Final_AdvanceTech\\Inventory.cs",
-              "ToolTip": "C:\\coding\\ChatGPT\\Final_AdvanceTech\\Final_AdvanceTech\\Inventory.cs [Design]",
-              "RelativeToolTip": "Final_AdvanceTech\\Inventory.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-12-06T07:44:44.684Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2024-12-29T03:35:16.963Z"
             }
           ]
         }

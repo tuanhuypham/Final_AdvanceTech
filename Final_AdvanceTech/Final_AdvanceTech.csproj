@@ -62,6 +62,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Forms\F_TableServices\SelectDishForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\F_TableServices\SelectDishForm.Designer.cs">
+      <DependentUpon>SelectDishForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="HumanResources.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,6 +92,9 @@
     <Compile Include="LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Dishes.cs" />
+    <Compile Include="Models\OrderDishes.cs" />
+    <Compile Include="Models\Orders.cs" />
     <Compile Include="Payment_And_Billing.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +109,9 @@
     <Compile Include="TableService.Designer.cs">
       <DependentUpon>TableService.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Forms\F_TableServices\SelectDishForm.resx">
+      <DependentUpon>SelectDishForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="HumanResources.resx">
       <DependentUpon>HumanResources.cs</DependentUpon>
     </EmbeddedResource>
@@ -156,5 +168,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
