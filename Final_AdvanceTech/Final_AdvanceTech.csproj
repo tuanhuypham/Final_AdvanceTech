@@ -86,6 +86,14 @@
     <Compile Include="LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+<<<<<<< HEAD
+=======
+    <Compile Include="Models\Bills.cs" />
+    <Compile Include="Models\Menus.cs" />
+    <Compile Include="Models\OrderDetail.cs" />
+    <Compile Include="Models\Orders.cs" />
+    <Compile Include="Models\Tables.cs" />
+>>>>>>> 468a5277089e7f640f65325cd10cc590b7ded3a8
     <Compile Include="Payment_And_Billing.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +102,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BillsService.cs" />
+    <Compile Include="Services\MenuService.cs" />
+    <Compile Include="Services\OrderDetailService.cs" />
+    <Compile Include="Services\OrderService.cs" />
+    <Compile Include="Services\TablesService.cs" />
     <Compile Include="TableService.cs">
       <SubType>Form</SubType>
     </Compile>

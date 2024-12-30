@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Final_AdvanceTech.Models
 {
-    public class Orders
+    public class Tables
     {
-        public int? OrderID { get; set; }
         public int TableID { get; set; }
-        public DateTime OrderTime { get; set; }
-        public string Status { get; set; } 
+        public int TableNumber { get; set; }
+        public string TableStatus { get; set; } = "Trống";
     }
 }
