@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.ListDish = new System.Windows.Forms.ListBox();
+            this.ListMenuData = new System.Windows.Forms.ListBox();
             this.SelectedDisesGridView = new System.Windows.Forms.DataGridView();
             this.label2 = new System.Windows.Forms.Label();
             this.btnResetCurrentDishes = new System.Windows.Forms.Button();
@@ -48,15 +48,16 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Select dishes";
             // 
-            // ListDish
+            // ListMenuData
             // 
-            this.ListDish.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ListDish.FormattingEnabled = true;
-            this.ListDish.ItemHeight = 22;
-            this.ListDish.Location = new System.Drawing.Point(31, 56);
-            this.ListDish.Name = "ListDish";
-            this.ListDish.Size = new System.Drawing.Size(757, 202);
-            this.ListDish.TabIndex = 2;
+            this.ListMenuData.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ListMenuData.FormattingEnabled = true;
+            this.ListMenuData.ItemHeight = 22;
+            this.ListMenuData.Location = new System.Drawing.Point(31, 56);
+            this.ListMenuData.Name = "ListMenuData";
+            this.ListMenuData.Size = new System.Drawing.Size(757, 202);
+            this.ListMenuData.TabIndex = 2;
+            this.ListMenuData.DoubleClick += new System.EventHandler(this.ListMenuDoubleClick);
             // 
             // SelectedDisesGridView
             // 
@@ -117,7 +118,7 @@
             this.Controls.Add(this.btnOrder);
             this.Controls.Add(this.btnResetCurrentDishes);
             this.Controls.Add(this.SelectedDisesGridView);
-            this.Controls.Add(this.ListDish);
+            this.Controls.Add(this.ListMenuData);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "SelectDishForm";
@@ -130,7 +131,7 @@
 
         #endregion
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListBox ListDish;
+        private System.Windows.Forms.ListBox ListMenuData;
         private System.Windows.Forms.DataGridView SelectedDisesGridView;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnResetCurrentDishes;

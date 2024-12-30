@@ -30,13 +30,9 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.listTablesBox = new System.Windows.Forms.ListBox();
             this.BtnQRcode = new System.Windows.Forms.Button();
             this.btnAddBillPayment = new System.Windows.Forms.Button();
-            this.listViewOder = new System.Windows.Forms.ListView();
-            this.OderID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.FoodName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Quantity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Price = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.txtTotalAmount = new System.Windows.Forms.TextBox();
             this.txtUsername = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -46,17 +42,16 @@
             this.Redit_Card = new System.Windows.Forms.RadioButton();
             this.Cash = new System.Windows.Forms.RadioButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.PaymentID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.TotalAmount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnSearch = new System.Windows.Forms.Button();
             this.txtPaymentID = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.OrderGridView = new System.Windows.Forms.DataGridView();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.OrderGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -71,9 +66,10 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.OrderGridView);
+            this.tabPage1.Controls.Add(this.listTablesBox);
             this.tabPage1.Controls.Add(this.BtnQRcode);
             this.tabPage1.Controls.Add(this.btnAddBillPayment);
-            this.tabPage1.Controls.Add(this.listViewOder);
             this.tabPage1.Controls.Add(this.txtTotalAmount);
             this.tabPage1.Controls.Add(this.txtUsername);
             this.tabPage1.Controls.Add(this.label2);
@@ -86,6 +82,15 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Thanh toán";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // listTablesBox
+            // 
+            this.listTablesBox.FormattingEnabled = true;
+            this.listTablesBox.ItemHeight = 16;
+            this.listTablesBox.Location = new System.Drawing.Point(23, 163);
+            this.listTablesBox.Name = "listTablesBox";
+            this.listTablesBox.Size = new System.Drawing.Size(108, 196);
+            this.listTablesBox.TabIndex = 9;
             // 
             // BtnQRcode
             // 
@@ -106,21 +111,6 @@
             this.btnAddBillPayment.Text = "Lập hóa đơn";
             this.btnAddBillPayment.UseVisualStyleBackColor = true;
             this.btnAddBillPayment.Click += new System.EventHandler(this.btnAddBillPayment_Click);
-            // 
-            // listViewOder
-            // 
-            this.listViewOder.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.OderID,
-            this.FoodName,
-            this.Quantity,
-            this.Price});
-            this.listViewOder.HideSelection = false;
-            this.listViewOder.Location = new System.Drawing.Point(23, 168);
-            this.listViewOder.Name = "listViewOder";
-            this.listViewOder.Size = new System.Drawing.Size(723, 156);
-            this.listViewOder.TabIndex = 6;
-            this.listViewOder.UseCompatibleStateImageBehavior = false;
-            this.listViewOder.View = System.Windows.Forms.View.List;
             // 
             // txtTotalAmount
             // 
@@ -202,7 +192,7 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.listView1);
+            this.tabPage2.Controls.Add(this.listBox1);
             this.tabPage2.Controls.Add(this.btnSearch);
             this.tabPage2.Controls.Add(this.txtPaymentID);
             this.tabPage2.Controls.Add(this.label3);
@@ -214,19 +204,6 @@
             this.tabPage2.Text = "Kiểm tra hóa đơn";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // listView1
-            // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.PaymentID,
-            this.Date,
-            this.TotalAmount});
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(50, 176);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(641, 236);
-            this.listView1.TabIndex = 3;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            // 
             // btnSearch
             // 
             this.btnSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
@@ -236,6 +213,7 @@
             this.btnSearch.TabIndex = 2;
             this.btnSearch.Text = "Tìm kiếm";
             this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // txtPaymentID
             // 
@@ -254,6 +232,25 @@
             this.label3.TabIndex = 0;
             this.label3.Text = "Tìm kiếm hóa đơn";
             // 
+            // OrderGridView
+            // 
+            this.OrderGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.OrderGridView.Location = new System.Drawing.Point(139, 163);
+            this.OrderGridView.Name = "OrderGridView";
+            this.OrderGridView.RowHeadersWidth = 51;
+            this.OrderGridView.RowTemplate.Height = 24;
+            this.OrderGridView.Size = new System.Drawing.Size(594, 196);
+            this.OrderGridView.TabIndex = 10;
+            // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 16;
+            this.listBox1.Location = new System.Drawing.Point(50, 156);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(641, 292);
+            this.listBox1.TabIndex = 3;
+            // 
             // Payment_And_Billing
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -270,6 +267,7 @@
             this.groupBox1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.OrderGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -285,21 +283,15 @@
         private System.Windows.Forms.RadioButton Cash;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListView listViewOder;
-        private System.Windows.Forms.ColumnHeader OderID;
-        private System.Windows.Forms.ColumnHeader FoodName;
-        private System.Windows.Forms.ColumnHeader Quantity;
-        private System.Windows.Forms.ColumnHeader Price;
         private System.Windows.Forms.TextBox txtTotalAmount;
         private System.Windows.Forms.TextBox txtUsername;
         private System.Windows.Forms.Button btnAddBillPayment;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.ColumnHeader PaymentID;
-        private System.Windows.Forms.ColumnHeader Date;
-        private System.Windows.Forms.ColumnHeader TotalAmount;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.TextBox txtPaymentID;
         private System.Windows.Forms.Button BtnQRcode;
+        private System.Windows.Forms.ListBox listTablesBox;
+        private System.Windows.Forms.DataGridView OrderGridView;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
