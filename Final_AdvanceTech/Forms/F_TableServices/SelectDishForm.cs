@@ -1,4 +1,5 @@
 ﻿using Final_AdvanceTech.Models;
+using Final_AdvanceTech.Services;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,42 +10,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Final_AdvanceTech.Forms.FTableServices
 {
     public partial class SelectDishForm : Form
     {
-        public List<OrderDishes> CurrentOrderDishes = new List<OrderDishes>();
-        public List<Dishes> Dishes = new List<Dishes>();
-        private int CurrentTable;
+        private MenuService menuService = new MenuService();
         private BindingSource bindingSource;
+        private int _tableID;
+        private int _orderID;
+        public List<OrderDetail> SelectedOrderDetails = new List<OrderDetail>();
+
+
         public SelectDishForm()
         {
             InitializeComponent();
+            
         }
 
-        public SelectDishForm(List<Dishes> dishes,int table)
+        public SelectDishForm(int TableID,int orderid)
         {
             InitializeComponent();
-
-            //khoi tao ban hien tai
-            CurrentTable = table;
-
-            //Khoi tao ListBox tat ca mon an
-            ListDish.DataSource = dishes;
-            ListDish.DisplayMember = "DisplayDish";
-            ListDish.DoubleClick += ListDish_DoubleClick;
-
-            //Khoi tao GridView tat ca mon an nguoi dung chon
-            Dishes = dishes;
-
+            _tableID = TableID;
+            _orderID = orderid;
+            ListMenuData.DataSource = menuService.GetMenus();
+            ListMenuData.DisplayMember = "DisplayMenu";
+            
+            SelectedDisesGridView.Columns.Add("dishName", "Name");
+            SelectedDisesGridView.Columns.Add("dishPrice", "Price");
+            SelectedDisesGridView.Columns.Add("dishCateGory", "CateGory");
+            //SelectedDisesGridView.Columns.Add("test", "test");
             bindingSource = new BindingSource();
-            bindingSource.DataSource = CurrentOrderDishes;
-            SelectedDisesGridView.Columns.Add("dishName", "Dish Name");
-            SelectedDisesGridView.Columns.Add("dishPrice", "Dish Price");
+            bindingSource.DataSource = SelectedOrderDetails;
             SelectedDisesGridView.DataSource = bindingSource;
-
-
+            SelectedDisesGridView.Columns["MenuItemID"].Visible = false;
+            SelectedDisesGridView.Columns["OrderDetailID"].Visible = false;
             SelectedDisesGridView.CellFormatting += SelectedDisesGridView_CellFormatting;
         }
 
@@ -52,73 +53,101 @@ namespace Final_AdvanceTech.Forms.FTableServices
         {
             if (e.RowIndex >= 0) // Kiểm tra nếu là dòng hợp lệ
             {
-                if (CurrentOrderDishes.Count > 0)
+                if (SelectedOrderDetails.Count > 0)
                 {
                     // Lấy giá trị từ cột "Price" ở dòng hiện tại
-                    if (SelectedDisesGridView.Rows[e.RowIndex].Cells["dish_id"].Value != null)
+                    if (SelectedDisesGridView.Rows[e.RowIndex].Cells["MenuItemID"].Value != null)
                     {
-                        var dishid = (int)SelectedDisesGridView.Rows[e.RowIndex].Cells["dish_id"].Value;
-                        var dish = GetDishById(dishid);
-                        SelectedDisesGridView.Rows[e.RowIndex].Cells["dishName"].Value = dish.Name;
-                        SelectedDisesGridView.Rows[e.RowIndex].Cells["dishPrice"].Value = dish.Price;
+                        int rowMenuItemID = (int)SelectedDisesGridView.Rows[e.RowIndex].Cells["MenuItemID"].Value;
+                        var menuId = rowMenuItemID;
+                        Menus menu = menuService.GetMenuById(menuId);
+                        SelectedDisesGridView.Rows[e.RowIndex].Cells["dishName"].Value = menu.ItemName;
+                        SelectedDisesGridView.Rows[e.RowIndex].Cells["dishPrice"].Value = menu.Price;
+                        SelectedDisesGridView.Rows[e.RowIndex].Cells["dishCateGory"].Value = menu.Category;
+                        //SelectedDisesGridView.Rows[e.RowIndex].Cells["test"].Value = _tableID;
                     }
                 }
             }
         }
 
-        public Dishes GetDishById(int id)
-        {
-            return Dishes.Where(d => d.dish_id == id).FirstOrDefault();
-        }
 
         private void label1_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void ListDish_DoubleClick(object sender, EventArgs e)
-        {
-            if (ListDish.SelectedItem != null)
-            {   
-                // lay mon an hien tai
-                Dishes selectedDish = ListDish.SelectedItem as Dishes;
-                var orderDish = CurrentOrderDishes.FirstOrDefault(o => o.dish_id == selectedDish.dish_id);
-
-                if (orderDish == null)
-                {
-                    CurrentOrderDishes.Add(new OrderDishes
-                    {
-                        dish_id = selectedDish.dish_id,
-                        order_id = CurrentTable,
-                        note = "",
-                        quantity = 1
-                    });
-                }
-                else
-                {
-                    orderDish.quantity += 1;
-                }
-                bindingSource.ResetBindings(false);
-            }
-        }
-
         private void btnResetCurrentDishes_Click(object sender, EventArgs e)
         {
-            CurrentOrderDishes.Clear();
+            SelectedOrderDetails.Clear();
             SelectedDisesGridView.Rows.Clear();
         }
 
         private void btnOrder_Click(object sender, EventArgs e)
         {
+            int orderId = 0;
 
+            if (_orderID == 0)
+            {
+                OrderService orderService = new OrderService();
+                var order = new Orders
+                {
+                    TableID = _tableID,
+                    OrderTime = DateTime.Now,
+                    Status = "Chưa thanh toán"
+                };
+                orderId = orderService.CreateOrder(order);
+                TablesService tableService = new TablesService();
+                tableService.updateTableStatus(_tableID, "chờ phục vụ");
+            }
+            else
+            {
+                orderId = _orderID;
+            }
+
+            OrderDetailService orderDetailService = new OrderDetailService();
+            if (orderId != 0)
+            {
+                foreach (var item in SelectedOrderDetails)
+                {
+                    item.OrderID = orderId;
+                    item.note = "không ghi chú";
+                }
+                orderDetailService.addOrderDetails(SelectedOrderDetails);
+            }
+            Console.WriteLine("Order created");
             this.Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            CurrentOrderDishes.Clear();
+            SelectedOrderDetails.Clear();
             SelectedDisesGridView.Rows.Clear();
             this.Close();
+        }
+
+        private void ListMenuDoubleClick(object sender, EventArgs e)
+        {
+            Menus selectedMenu = ListMenuData.SelectedItem as Menus;
+            if (selectedMenu != null)
+            {
+                var item = SelectedOrderDetails.FirstOrDefault(o => o.MenuItemID == selectedMenu.MenuItemID);
+
+                if (item == null)
+                {
+                    SelectedOrderDetails.Add(new OrderDetail
+                    {
+                        MenuItemID = selectedMenu.MenuItemID,
+                        OrderID = 0,
+                        quantity = 1,
+                        note = "",
+                    });
+                }
+                else
+                {
+                    item.quantity++;
+                }
+                bindingSource.ResetBindings(false);
+            }
         }
     }
 }

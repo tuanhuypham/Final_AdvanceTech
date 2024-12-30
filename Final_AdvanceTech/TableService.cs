@@ -1,5 +1,6 @@
 ﻿using Final_AdvanceTech.Forms.FTableServices;
 using Final_AdvanceTech.Models;
+using Final_AdvanceTech.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,25 +17,30 @@ namespace Final_AdvanceTech
 
     public partial class TableService : Form
     {
-        private TreeView treeViewTable;
-        private Button btn_AddOrder, btn_UpdateStatus, btn_ShowNotifications;
-
-        private List<Orders> Orders = new List<Orders>();
-        private List<OrderDishes> CurrentOrderDishes = new List<OrderDishes>();
-        private List<Dishes> Dishes = new List<Dishes>();
         private BindingSource bindingSource = new BindingSource();
+        private OrderService orderService = new OrderService();
+        private OrderDetailService orderDetailService = new OrderDetailService();
+        private TablesService tablesService = new TablesService();
         public TableService()
         {
             InitializeComponents();
             LoadTableData();
+
+            int initOrderDetail = orderService.GetOrderByTableId(1)?.OrderID ?? 0;
+            bindingSource.DataSource = orderDetailService.GetOrderDetailsByOrderId(initOrderDetail);
+
+            DataGridOrderDishes.Columns.Add("dishName", "Dish Name");
+            DataGridOrderDishes.Columns.Add("dishPrice", "Dish Price");
+            DataGridOrderDishes.Columns.Add("dishCateGory", "CateGory");
+            DataGridOrderDishes.Columns.Add("orderStatus", "Order Status");
+            DataGridOrderDishes.Columns.Add("tableStatus", "Table Status");
+            DataGridOrderDishes.DataSource = bindingSource;
+            DataGridOrderDishes.Columns["MenuItemID"].Visible = false;
+            DataGridOrderDishes.Columns["OrderID"].Visible = false;
+            DataGridOrderDishes.Columns["OrderDetailID"].Visible = false;
+            DataGridOrderDishes.CellFormatting += DataGridOrderDishes_CellFormatting;
         }
 
-        public class OrderUI
-        {
-            public string Name { get; set; }  // Tên món ăn
-            public decimal Price { get; set; }  // Giá của món ăn
-            public string Note { get; set; }  // Ghi chú về món3 ăn
-        }
         private void InitializeComponents()
         {
             // TreeView
@@ -46,13 +52,12 @@ namespace Final_AdvanceTech
 
             // Buttons
             btnAddOrder = new Button { Text = "Gọi món", Dock = DockStyle.Top };
-            btnUpdateStatus = new Button { Text = "Cập nhật trạng thái", Dock = DockStyle.Top };
-            btnShowNotifications = new Button { Text = "Hiển thị thông báo", Dock = DockStyle.Top };
+            btnUpdateStatus = new Button { Text = "Nhà bếp", Dock = DockStyle.Top };
+            btnShowNotifications = new Button { Text = "Thanh toán", Dock = DockStyle.Top };
 
             btnAddOrder.Click += btnAddOrder_Click;
             btnUpdateStatus.Click += btnUpdateStatus_Click;
-            btnShowNotifications.Click += btnShowNotifications_Click;
-
+            btnShowNotifications.Click += BtnShowNotifications_Click;
             // DataGridView
             DataGridOrderDishes = new DataGridView
             {
@@ -61,16 +66,6 @@ namespace Final_AdvanceTech
                 ReadOnly = true,
                 ColumnCount = 2,
             };
-            Orders = GetOrders();
-            CurrentOrderDishes = GetOrderDishes();
-            Dishes = GetVietnameseDishes();
-
-            bindingSource.DataSource = CurrentOrderDishes;
-            DataGridOrderDishes.DataSource = bindingSource;
-            DataGridOrderDishes.Columns.Add("dishName", "Dish Name");
-            DataGridOrderDishes.Columns.Add("dishPrice", "Dish Price");
-            DataGridOrderDishes.CellFormatting += DataGridOrderDishes_CellFormatting;
-
             treeViewTables.AfterSelect += TreeViewTables_AfterSelect;
 
             // Layout
@@ -91,107 +86,44 @@ namespace Final_AdvanceTech
             this.Height = 600;
         }
 
-        // Phương thức trả về danh sách món ăn
-        public List<Dishes> GetVietnameseDishes()
+        private void BtnShowNotifications_Click(object sender, EventArgs e)
         {
-            return new List<Dishes>
-            {
-                new Dishes {dish_id=1, Name = "Phở bò", Price = 50000, Note = "Nước dùng thơm ngon, bò tái chín" },
-                new Dishes {dish_id=2, Name = "Bún chả Hà Nội", Price = 45000, Note = "Chả nướng thơm lừng" },
-                new Dishes {dish_id = 3,  Name = "Bún bò Huế", Price = 55000, Note = "Đậm đà hương vị Huế ,là  món tôi ăn thay cơm" },
-                new Dishes {dish_id = 4,  Name = "Cơm tấm Sài Gòn", Price = 40000, Note = "Sườn nướng mềm, thơm" },
-                new Dishes {dish_id = 5,  Name = "Cháo lòng", Price = 35000, Note = "Thơm ngon, ấm bụng" },
-                new Dishes {dish_id = 6,  Name = "Nem rán (Chả giò)", Price = 30000, Note = "Giòn rụm, nhân thịt đậm vị" },
-                new Dishes {dish_id = 7,  Name = "Nem cuốn (Gỏi cuốn)", Price = 25000, Note = "Tươi mát, chấm nước mắm ngon" },
-                new Dishes {dish_id = 8,  Name = "Bánh xèo", Price = 35000, Note = "Vỏ giòn, nhân tôm thịt" },
-                new Dishes {dish_id = 9,  Name = "Bánh cuốn", Price = 30000, Note = "Mềm mịn, nhân thịt nấm" },
-                new Dishes {dish_id = 10,  Name = "Xôi gà", Price = 35000, Note = "Xôi mềm, gà thơm" },
-                new Dishes {dish_id = 11,  Name = "Trà đá", Price = 5000, Note = "Giải khát truyền thống" },
-                new Dishes {dish_id = 12,  Name = "Cà phê sữa đá", Price = 20000, Note = "Đậm vị cà phê Việt Nam" },
-                new Dishes {dish_id = 13,  Name = "Nước mía", Price = 15000, Note = "Ngọt mát tự nhiên" },
-                new Dishes {dish_id = 14,  Name = "Chè đậu xanh", Price = 25000, Note = "Ngọt thanh, giải nhiệt" },
-                new Dishes {dish_id = 15,  Name = "Sinh tố dừa", Price = 30000, Note = "Thơm ngon, béo ngậy" }
-            };
+            Payment_And_Billing payment_And_Billing = new Payment_And_Billing();
+            payment_And_Billing.Show();
         }
-
-        public List<Orders> GetOrders()
-        {
-            return new List<Orders>
-            {
-                new Orders{
-                    order_id=1,
-                    customer_id=1,
-                    table_id=1,
-                    order_time=new DateTime(),
-                    payment_status="pending",
-                    total_amount=0
-                },
-                new Orders{
-                    order_id=2,
-                    customer_id=2,
-                    table_id=2,
-                    order_time=new DateTime(),
-                    payment_status="pending",
-                    total_amount=0
-                },
-            };
-        }
-
-        public List<OrderDishes> GetOrderDishes()
-        {
-            return new List<OrderDishes>
-            {
-                new OrderDishes{
-                    dish_id=5,
-                    order_id=1,
-                    note="sadsad",
-                    quantity=1
-                },
-                new OrderDishes{
-                    dish_id=6,
-                    order_id=1,
-                    note="sadsad",
-                    quantity=1
-                },
-                new OrderDishes{
-                    dish_id=7,
-                    order_id=2,
-                    note="sadsad",
-                    quantity=1
-                },
-            };
-        }
-
-        public Dishes GetDishById(int id)
-        {
-            return Dishes.Where(d => d.dish_id == id).FirstOrDefault();
-        }
-
 
         private void LoadTableData()
         {
             // Dữ liệu giả cho TreeView
-            var area1 = new TreeNode("Khu vực 1");
+            var area1 = new TreeNode("Khu vực Ban an");
             area1.Nodes.Add(new TreeNode("Bàn 1") { Tag = 1 });
             area1.Nodes.Add(new TreeNode("Bàn 2") { Tag = 2 });
-
-            var area2 = new TreeNode("Khu vực 2");
-            area2.Nodes.Add(new TreeNode("Bàn 3") { Tag = 3 });
+            area1.Nodes.Add(new TreeNode("Bàn 3") { Tag = 3 });
+            area1.Nodes.Add(new TreeNode("Bàn 4") { Tag = 4 });
+            area1.Nodes.Add(new TreeNode("Bàn 5") { Tag = 5 });
+            area1.Nodes.Add(new TreeNode("Bàn 6") { Tag = 6 });
+            area1.Nodes.Add(new TreeNode("Bàn 7") { Tag = 7 });
 
             treeViewTables.Nodes.Add(area1);
-            treeViewTables.Nodes.Add(area2);
         }
 
         private void DataGridOrderDishes_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             if (e.RowIndex >= 0) // Kiểm tra nếu là dòng hợp lệ
-            {
+            {   
+                MenuService menuService = new MenuService();
                 // Lấy giá trị từ cột "Price" ở dòng hiện tại
-                var dishid = (int)DataGridOrderDishes.Rows[e.RowIndex].Cells["dish_id"].Value;
-                var dish = GetDishById(dishid);
-                DataGridOrderDishes.Rows[e.RowIndex].Cells["dishName"].Value = dish.Name; 
-                DataGridOrderDishes.Rows[e.RowIndex].Cells["dishPrice"].Value = dish.Price; 
-            }
+                var dishid = (int)DataGridOrderDishes.Rows[e.RowIndex].Cells["MenuItemID"].Value;
+                var orderid = (int)DataGridOrderDishes.Rows[e.RowIndex].Cells["OrderID"].Value;
+                var dish = menuService.GetMenuById(dishid);
+                var order = orderService.GetOrderById(orderid);
+                var table = tablesService.GetTableByTableNumber(order.TableID);
+                DataGridOrderDishes.Rows[e.RowIndex].Cells["dishName"].Value = dish.ItemName;
+                DataGridOrderDishes.Rows[e.RowIndex].Cells["dishPrice"].Value = dish.Price;
+                DataGridOrderDishes.Rows[e.RowIndex].Cells["dishCateGory"].Value = dish.Category;
+                DataGridOrderDishes.Rows[e.RowIndex].Cells["orderStatus"].Value = order.Status;
+                DataGridOrderDishes.Rows[e.RowIndex].Cells["tableStatus"].Value = table.TableStatus;
+            }   
         }
 
         private void TreeViewTables_AfterSelect(object sender, TreeViewEventArgs e)
@@ -207,22 +139,57 @@ namespace Final_AdvanceTech
         {
             // Dữ liệu giả cho DataGridView
             if (tableId == 1)
-            {   
-                var Orderid = Orders.Where(o => o.table_id == 1).Select(o=>o.order_id).ToList();
-                var filteredOrders = CurrentOrderDishes.Where(o => Orderid.Contains(o.order_id)).ToList();
-                bindingSource.DataSource = filteredOrders;
+            {
+                int initOrderDetail = orderService.GetOrderByTableId(1)?.OrderID ?? 0;
+                bindingSource.DataSource = orderDetailService.GetOrderDetailsByOrderId(initOrderDetail);
                 bindingSource.ResetBindings(false);
+                this.Text = "Quản lý phục vụ bàn (Bàn "+1+")";
             }
             else if (tableId == 2)
             {
-                var Orderid = Orders.Where(o => o.table_id == 2).Select(o => o.order_id).ToList();
-                var filteredOrders = CurrentOrderDishes.Where(o => Orderid.Contains(o.order_id)).ToList();
-                bindingSource.DataSource = filteredOrders;
+                int initOrderDetail = orderService.GetOrderByTableId(2)?.OrderID ?? 0;
+                bindingSource.DataSource = orderDetailService.GetOrderDetailsByOrderId(initOrderDetail);
                 bindingSource.ResetBindings(false);
+                this.Text = "Quản lý phục vụ bàn (Bàn " + 2 + ")";
+            }
+            else if (tableId == 3)
+            {
+                int initOrderDetail = orderService.GetOrderByTableId(3)?.OrderID ?? 0;
+                bindingSource.DataSource = orderDetailService.GetOrderDetailsByOrderId(initOrderDetail);
+                bindingSource.ResetBindings(false);
+                this.Text = "Quản lý phục vụ bàn (Bàn " + 3 + ")";
+            }
+            else if (tableId == 4)
+            {
+                int initOrderDetail = orderService.GetOrderByTableId(4)?.OrderID ?? 0;
+                bindingSource.DataSource = orderDetailService.GetOrderDetailsByOrderId(initOrderDetail);
+                bindingSource.ResetBindings(false);
+                this.Text = "Quản lý phục vụ bàn (Bàn " + 4 + ")";
+            }
+            else if (tableId == 5)
+            {
+                int initOrderDetail = orderService.GetOrderByTableId(5)?.OrderID ?? 0;
+                bindingSource.DataSource = orderDetailService.GetOrderDetailsByOrderId(initOrderDetail);
+                bindingSource.ResetBindings(false);
+                this.Text = "Quản lý phục vụ bàn (Bàn " + 5 + ")";
+            }
+            else if (tableId == 6)
+            {
+                int initOrderDetail = orderService.GetOrderByTableId(6)?.OrderID ?? 0;
+                bindingSource.DataSource = orderDetailService.GetOrderDetailsByOrderId(initOrderDetail);
+                bindingSource.ResetBindings(false);
+                this.Text = "Quản lý phục vụ bàn (Bàn " + 6 + ")";
+            }
+            else if (tableId == 7)
+            {
+                int initOrderDetail = orderService.GetOrderByTableId(7)?.OrderID ?? 0;
+                bindingSource.DataSource = orderDetailService.GetOrderDetailsByOrderId(initOrderDetail);
+                bindingSource.ResetBindings(false);
+                this.Text = "Quản lý phục vụ bàn (Bàn " + 7 + ")";
             }
             else
             {
-                bindingSource.DataSource = new List<OrderDishes>();
+                bindingSource.DataSource = new List<OrderDetail>();
                 bindingSource.ResetBindings(false);
             }
         }
@@ -244,48 +211,32 @@ namespace Final_AdvanceTech
 
         private void btnAddOrder_Click(object sender, EventArgs e)
         {   
-            //Lấy tất cả món an,ban hien tai
-            List<Dishes> dishes = GetVietnameseDishes();
-
             int table = 0;
             if (treeViewTables.SelectedNode.Tag != null) {
                 table = (int)treeViewTables.SelectedNode.Tag;
             }
-
-            //Dua tất cả món an vao SelectDishForm
-            using (SelectDishForm dialog = new SelectDishForm(dishes, table))
-            {
+            int initOrderDetail = orderService.GetOrderByTableId(table)?.OrderID ?? 0;
+            //Console.WriteLine(initOrderDetail);
+            using (SelectDishForm dialog = new SelectDishForm(table, initOrderDetail))
+            {  
                 // Mở dialog gọi món
                 if (dialog.ShowDialog() == DialogResult.OK)
                 { 
-                }
-                else
-                {
-                    Orders.Add(new Orders
-                    {
-                        order_id = 5,
-                        customer_id = 1,                            
-                        table_id = table,
-                        order_time = new DateTime(),
-                        payment_status = "pending",
-                        Order_status = "in progress",
-                        total_amount = 0
-                    });
-                    var orderDishes = dialog.CurrentOrderDishes;
-                    foreach (var orderDish in orderDishes)
-                    {
-                        orderDish.order_id = 5;
-                    }
-                    CurrentOrderDishes.AddRange(orderDishes);
-                    bindingSource.ResetBindings(false);
-                    LoadOrderDetails(table);
+
                 }
             }
         }
 
         private void btnUpdateStatus_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng cập nhật trạng thái đang được triển khai!", "Thông báo");
+            int table = 0;
+            if (treeViewTables.SelectedNode.Tag != null)
+            {
+                table = (int)treeViewTables.SelectedNode.Tag;
+            }
+            KitchenForm kitchenForm = new KitchenForm(table);
+            kitchenForm.Text = "Nhà bếp (Bàn "+table+")";
+            kitchenForm.Show();
         }
 
         private void btnShowNotifications_Click(object sender, EventArgs e)

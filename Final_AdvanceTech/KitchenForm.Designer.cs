@@ -29,11 +29,6 @@
         private void InitializeComponent()
         {
             this.dataGridViewOrders = new System.Windows.Forms.DataGridView();
-            this.OrderID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DishName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Table = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnPrepare = new System.Windows.Forms.Button();
             this.btnCooking = new System.Windows.Forms.Button();
             this.btnComplete = new System.Windows.Forms.Button();
@@ -43,53 +38,12 @@
             // dataGridViewOrders
             // 
             this.dataGridViewOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewOrders.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.OrderID,
-            this.DishName,
-            this.Quantity,
-            this.Table,
-            this.Status});
             this.dataGridViewOrders.Location = new System.Drawing.Point(42, 21);
             this.dataGridViewOrders.Name = "dataGridViewOrders";
             this.dataGridViewOrders.RowHeadersWidth = 51;
             this.dataGridViewOrders.RowTemplate.Height = 24;
             this.dataGridViewOrders.Size = new System.Drawing.Size(680, 311);
             this.dataGridViewOrders.TabIndex = 0;
-            // 
-            // OrderID
-            // 
-            this.OrderID.HeaderText = "Mã hóa đơn";
-            this.OrderID.MinimumWidth = 6;
-            this.OrderID.Name = "OrderID";
-            this.OrderID.Width = 125;
-            // 
-            // DishName
-            // 
-            this.DishName.HeaderText = "Tên món";
-            this.DishName.MinimumWidth = 6;
-            this.DishName.Name = "DishName";
-            this.DishName.Width = 125;
-            // 
-            // Quantity
-            // 
-            this.Quantity.HeaderText = "Số lượng";
-            this.Quantity.MinimumWidth = 6;
-            this.Quantity.Name = "Quantity";
-            this.Quantity.Width = 125;
-            // 
-            // Table
-            // 
-            this.Table.HeaderText = "Bàn ăn";
-            this.Table.MinimumWidth = 6;
-            this.Table.Name = "Table";
-            this.Table.Width = 125;
-            // 
-            // Status
-            // 
-            this.Status.HeaderText = "Trạng thái";
-            this.Status.MinimumWidth = 6;
-            this.Status.Name = "Status";
-            this.Status.Width = 125;
             // 
             // btnPrepare
             // 
@@ -140,11 +94,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dataGridViewOrders;
-        private System.Windows.Forms.DataGridViewTextBoxColumn OrderID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DishName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Table;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.Button btnPrepare;
         private System.Windows.Forms.Button btnCooking;
         private System.Windows.Forms.Button btnComplete;
