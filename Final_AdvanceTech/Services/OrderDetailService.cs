@@ -11,7 +11,7 @@ namespace Final_AdvanceTech.Services
 {
     public class OrderDetailService
     {
-        private string connectionString = "Data Source=LAPTOP-95AQ4INV\\SQLEXPRESS;Initial Catalog=Resaurant_system;Integrated Security=True;";
+        private string connectionString = "Data Source=LAPTOP-HK44U3IK;Initial Catalog=Resaurant_system;Integrated Security=True;TrustServerCertificate=True;";
 
         public List<OrderDetail> GetOrderDetailsByOrderId(int orderid)
         {

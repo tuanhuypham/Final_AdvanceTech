@@ -13,7 +13,9 @@ namespace Final_AdvanceTech
     public partial class LoginForm : Form
     {
         private const string HardcodedUsername = "admin";
-        private const string HardcodedPassword = "password123";
+        private const string EmployeeAccount = "employee";
+        private const string InventoryAccount = "inventory";
+        private const string HardcodedPassword = "1";
         public LoginForm()
         {
             InitializeComponent();
@@ -36,7 +38,24 @@ namespace Final_AdvanceTech
 
                 // Chuyển tới giao diện chính hoặc xử lý tiếp
                 this.Hide(); // Ẩn form đăng nhập
+                HumanResources mainForm = new HumanResources();
+                mainForm.Show();
+            } else if(username == EmployeeAccount && password == HardcodedPassword)
+            {
+                MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Chuyển tới giao diện chính hoặc xử lý tiếp
+                this.Hide(); // Ẩn form đăng nhập
                 TableService mainForm = new TableService();
+                mainForm.Show();
+            }
+            else if (username == InventoryAccount && password == HardcodedPassword)
+            {
+                MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Chuyển tới giao diện chính hoặc xử lý tiếp
+                this.Hide(); // Ẩn form đăng nhập
+                Inventory mainForm = new Inventory();
                 mainForm.Show();
             }
             else

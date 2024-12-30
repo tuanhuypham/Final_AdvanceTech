@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,189 +14,416 @@ namespace Final_AdvanceTech
 {
     public partial class Inventory : Form
     {
+        private string connectionString = "Data Source=LAPTOP-HK44U3IK;Initial Catalog=Resaurant_system;Integrated Security=True;TrustServerCertificate=True;";
+
         public Inventory()
         {
             InitializeComponent();
         }
 
-        private void InitializeBarChart()
-        {
-            // Cấu hình biểu đồ Bar Chart
-            chartBar.Series.Clear();
-            chartBar.ChartAreas.Clear();
-            chartBar.Titles.Clear();
-
-            // Thêm ChartArea
-            ChartArea barArea = new ChartArea("BarChartArea")
-            {
-                AxisX = { Title = "Tháng", Interval = 1 },
-                AxisY = { Title = "Số lượng" }
-            };
-            chartBar.ChartAreas.Add(barArea);
-
-            // Thêm Series
-            Series barSeries = new Series
-            {
-                Name = "Số lượng nhập/xuất",
-                ChartType = SeriesChartType.Bar,
-                IsValueShownAsLabel = true // Hiển thị giá trị trên cột
-            };
-
-            // Thêm dữ liệu
-            barSeries.Points.AddXY("Tháng 1", 50);
-            barSeries.Points.AddXY("Tháng 2", 70);
-            barSeries.Points.AddXY("Tháng 3", 40);
-
-            // Thiết lập màu cho từng cột (tuỳ chọn)
-            barSeries.Points[0].Color = Color.Red;
-            barSeries.Points[1].Color = Color.Green;
-            barSeries.Points[2].Color = Color.Blue;
-
-            chartBar.Series.Add(barSeries);
-
-            // Thêm tiêu đề
-            chartBar.Titles.Add("Biểu đồ số lượng nhập/xuất hàng hóa");
-
-            // Thêm Legend (tuỳ chọn)
-            chartBar.Legends.Clear();
-            chartBar.Legends.Add(new Legend("Legend1"));
-        }
-
-
-        private void InitializeCharts()
-        {
-            // Cấu hình biểu đồ Bar Chart
-            chartBar.Series.Clear();
-            chartBar.ChartAreas.Clear();
-
-            ChartArea barArea = new ChartArea("BarChartArea");
-            chartBar.ChartAreas.Add(barArea);
-
-            Series barSeries = new Series
-            {
-                Name = "Số lượng nhập/xuất",
-                ChartType = SeriesChartType.Bar
-            };
-
-            barSeries.Points.AddXY("Tháng 1", 50);
-            barSeries.Points.AddXY("Tháng 2", 70);
-            barSeries.Points.AddXY("Tháng 3", 40);
-
-            chartBar.Series.Add(barSeries);
-
-            // Cấu hình biểu đồ Line Chart
-            chartLine.Series.Clear();
-            chartLine.ChartAreas.Clear();
-
-            ChartArea lineArea = new ChartArea("LineChartArea");
-            chartLine.ChartAreas.Add(lineArea);
-
-            Series lineSeries = new Series
-            {
-                Name = "Xu hướng hàng tồn",
-                ChartType = SeriesChartType.Line
-            };
-
-            lineSeries.Points.AddXY("Tháng 1", 200);
-            lineSeries.Points.AddXY("Tháng 2", 150);
-            lineSeries.Points.AddXY("Tháng 3", 180);
-
-            chartLine.Series.Add(lineSeries);
-        }
-
-        private void UpdateBarChart(string[] labels, int[] values)
-        {
-            chartBar.Series[0].Points.Clear();
-            for (int i = 0; i < labels.Length; i++)
-            {
-                chartBar.Series[0].Points.AddXY(labels[i], values[i]);
-            }
-        }
-
-        private void UpdateLineChart(string[] labels, int[] values)
-        {
-            chartLine.Series[0].Points.Clear();
-            for (int i = 0; i < labels.Length; i++)
-            {
-                chartLine.Series[0].Points.AddXY(labels[i], values[i]);
-            }
-        }
 
         private void dataGridViewItems_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            if (e.ColumnIndex == 3) // Cột Trạng thái
+
+        }
+
+
+        private void LoadInventoryReport()
+        {
+            try
             {
-                int currentQty = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[1].Value);
-                int safetyQty = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[2].Value);
-                if (currentQty < safetyQty)
+                // Lấy ngày hiện tại (hoặc bạn có thể chọn ngày nào đó)
+                DateTime today = DateTime.Now.Date;
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    e.CellStyle.ForeColor = Color.Red;
+                    conn.Open();
+
+                    // Truy vấn lấy dữ liệu từ InventoryLogs theo ChangeDate
+                    string query = @"
+                            SELECT 
+                                CAST(L.ChangeDate AS DATE) AS LogDate, 
+                                SUM(CASE WHEN L.Type = 'Nhập' THEN L.ChangeAmount ELSE -L.ChangeAmount END) AS StockChange
+                            FROM InventoryLogs L
+                            WHERE L.ChangeDate >= @StartDate AND L.ChangeDate <= @EndDate
+                            GROUP BY CAST(L.ChangeDate AS DATE)
+                            ORDER BY LogDate";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@StartDate", today.AddDays(-30)); // 30 ngày qua
+                    cmd.Parameters.AddWithValue("@EndDate", today);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Xóa dữ liệu cũ trên Chart trước khi thêm mới
+                    chartInventory.Series.Clear();
+                    chartInventory.ChartAreas[0].AxisX.LabelStyle.Format = "dd/MM/yyyy"; // Định dạng ngày
+
+                    // Tạo Series cho biểu đồ
+                    var series = new Series("Stock Changes")
+                    {
+                        ChartType = SeriesChartType.Line,
+                        BorderWidth = 3
+                    };
+
+                    // Đọc dữ liệu và thêm vào biểu đồ
+                    while (reader.Read())
+                    {
+                        DateTime logDate = Convert.ToDateTime(reader["LogDate"]);
+                        int stockChange = Convert.ToInt32(reader["StockChange"]);
+
+                        series.Points.AddXY(logDate, stockChange);
+                    }
+
+                    // Thêm series vào Chart
+                    chartInventory.Series.Add(series);
                 }
-                else
-                {
-                    e.CellStyle.ForeColor = Color.Green;
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tải báo cáo: " + ex.Message);
             }
         }
 
+
+        private void LoadInventoryLogs()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT LogID, ItemID, ChangeAmount, ChangeDate, Type FROM InventoryLogs";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Xóa các dòng cũ trước khi thêm mới
+                    inventoryLog_DGV.Rows.Clear();
+
+                    while (reader.Read())
+                    {
+                        inventoryLog_DGV.Rows.Add(
+                            reader["ItemID"],
+                            reader["ChangeAmount"],
+                            Convert.ToDateTime(reader["ChangeDate"]).ToString("yyyy-MM-dd HH:mm:ss"),
+                            reader["Type"]
+                        );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tải dữ liệu InventoryLogs: " + ex.Message);
+            }
+        }
+
+        private void LoadInventory()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Truy vấn dữ liệu Inventory và tính toán UpdatedStock
+                    string query = @"
+                SELECT 
+                    I.ItemID, 
+                    I.ItemName, 
+                    ISNULL(I.CurrentStock + SUM(CASE WHEN L.Type = 'Nhập' THEN L.ChangeAmount ELSE -L.ChangeAmount END), I.CurrentStock) AS UpdatedStock, 
+                    I.SafeThreshold
+                FROM Inventory I
+                LEFT JOIN InventoryLogs L ON I.ItemID = L.ItemID
+                GROUP BY I.ItemID, I.ItemName, I.CurrentStock, I.SafeThreshold";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    // Xóa các dòng cũ trước khi thêm mới
+                    Inventory_DGV.Rows.Clear();
+
+                    while (reader.Read())
+                    {
+                        int updatedStock = Convert.ToInt32(reader["UpdatedStock"]);
+                        int safeThreshold = Convert.ToInt32(reader["SafeThreshold"]);
+                        string itemName = reader["ItemName"].ToString();
+
+                        // Thêm dữ liệu vào DataGridView
+                        int rowIndex = Inventory_DGV.Rows.Add(
+                            reader["ItemID"],
+                            itemName,
+                            updatedStock,
+                            safeThreshold
+                        );
+
+                        // Kiểm tra nếu UpdatedStock < SafeThreshold và tô đỏ cột ItemName
+                        if (updatedStock < safeThreshold)
+                        {
+                            Inventory_DGV.Rows[rowIndex].Cells["ItemName"].Style.ForeColor = Color.Red;
+                        }
+                        else
+                        {
+                            // Nếu không dưới ngưỡng an toàn, để màu bình thường
+                            Inventory_DGV.Rows[rowIndex].Cells["ItemName"].Style.ForeColor = Color.Black;
+                        }
+                    }
+
+                    // Tự động điều chỉnh kích thước cột
+                    Inventory_DGV.AutoResizeColumns();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tải dữ liệu Inventory: " + ex.Message);
+            }
+        }
+
+        private void InitializeChart()
+        {
+            // Cấu hình biểu đồ chartInventory
+            chartInventory.Series.Clear();
+            chartInventory.ChartAreas.Clear();
+            chartInventory.Titles.Clear();
+
+            // Thêm ChartArea cho biểu đồ
+            ChartArea chartArea = new ChartArea("ChartArea1")
+            {
+                AxisX =
+                {
+                    Title = "Ngày",
+                    LabelStyle = { Format = "dd/MM/yyyy" }  // Định dạng ngày trên trục X
+                },
+                AxisY =
+                {
+                    Title = "Số lượng thay đổi",
+                    LabelStyle = { Format = "N0" } // Định dạng số nguyên trên trục Y
+                }
+            };
+            chartInventory.ChartAreas.Add(chartArea);
+
+            // Thêm tiêu đề cho biểu đồ
+            chartInventory.Titles.Add("Báo cáo thay đổi số lượng tồn kho");
+
+            // Tùy chỉnh thêm nếu cần
+            chartInventory.BackColor = Color.White; // Màu nền của biểu đồ
+            chartInventory.BorderlineColor = Color.Black; // Màu viền của biểu đồ
+            chartInventory.BorderlineDashStyle = ChartDashStyle.Solid; // Kiểu đường viền của biểu đồ
+        }
+
+        private void LoadInventoryData()
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = @"
+                            SELECT i.ItemID, i.ItemName, i.CurrentStock, i.SafeThreshold
+                            FROM Inventory i";
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    Inventory_DGV.DataSource = dt; // Cập nhật DataGridView với dữ liệu mới
+
+                    // Kiểm tra điều kiện CurrentStock < SafeThreshold và thay đổi màu sắc của ô nếu cần
+                    foreach (DataGridViewRow row in Inventory_DGV.Rows)
+                    {
+                        int currentStock = Convert.ToInt32(row.Cells["CurrentStock"].Value);
+                        int safeThreshold = Convert.ToInt32(row.Cells["SafeThreshold"].Value);
+
+                        // Kiểm tra nếu tồn kho nhỏ hơn ngưỡng an toàn
+                        if (currentStock < safeThreshold)
+                        {
+                            // Tô màu đỏ cho tên hàng hóa nếu tồn kho nhỏ hơn ngưỡng an toàn
+                            row.Cells["ItemName"].Style.ForeColor = Color.Red;
+                        }
+                        else
+                        {
+                            // Nếu không nhỏ hơn ngưỡng an toàn, giữ màu mặc định
+                            row.Cells["ItemName"].Style.ForeColor = Color.Black;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tải lại dữ liệu: " + ex.Message);
+            }
+        }
 
         private void Inventory_Load(object sender, EventArgs e)
         {
-            InitializeBarChart();
-            InitializeCharts();
+            cmbType.Items.Add("Nhập");
+            cmbType.Items.Add("Xuất");
+            cmbType.SelectedIndex = 0; // Chọn giá trị mặc định là "Nhập"
+
+            InitializeChart();
+            LoadInventoryReport();
+            LoadInventoryLogs();
         }
 
-        private void ResetInputFields()
+        private void btnUpdate_Click_1(object sender, EventArgs e)
         {
-            // Kiểm tra và đặt lại TextBox
-            if (txtItemName != null)
-                txtItemName.Text = string.Empty;
-
-            // Kiểm tra và đặt lại NumericUpDown (Số lượng hiện tại)
-            if (nudCurrentQuantity != null)
+            try
             {
-                nudCurrentQuantity.Value = nudCurrentQuantity.Minimum; // Hoặc đặt về 0
-            }
+                int itemID = Convert.ToInt32(txtItemID.Text);
+                int changeAmount = Convert.ToInt32(txtChangeAmount.Text);
+                string type = cmbType.SelectedItem.ToString();
 
-            // Kiểm tra và đặt lại NumericUpDown (Ngưỡng an toàn)
-            if (nudSafetyThreshold != null)
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Bắt đầu giao dịch để đảm bảo tính toàn vẹn dữ liệu
+                    using (SqlTransaction transaction = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Thêm bản ghi vào InventoryLogs
+                            string queryLog = "INSERT INTO InventoryLogs (ItemID, ChangeAmount, Type) VALUES (@ItemID, @ChangeAmount, @Type)";
+                            SqlCommand cmdLog = new SqlCommand(queryLog, conn, transaction);
+                            cmdLog.Parameters.AddWithValue("@ItemID", itemID);
+                            cmdLog.Parameters.AddWithValue("@ChangeAmount", changeAmount);
+                            cmdLog.Parameters.AddWithValue("@Type", type);
+
+                            int rowsAffected = cmdLog.ExecuteNonQuery();
+
+                            if (rowsAffected > 0)
+                            {
+                                // Xác định hướng điều chỉnh tồn kho
+                                int adjustment = (type == "Nhập") ? changeAmount : -changeAmount;
+
+                                // Cập nhật CurrentStock trong bảng Inventory
+                                string queryUpdateStock = "UPDATE Inventory SET CurrentStock = CurrentStock + @Adjustment WHERE ItemID = @ItemID";
+                                SqlCommand cmdUpdateStock = new SqlCommand(queryUpdateStock, conn, transaction);
+                                cmdUpdateStock.Parameters.AddWithValue("@Adjustment", adjustment);
+                                cmdUpdateStock.Parameters.AddWithValue("@ItemID", itemID);
+
+                                int updateRows = cmdUpdateStock.ExecuteNonQuery();
+
+                                if (updateRows > 0)
+                                {
+                                    // Commit giao dịch nếu cả hai thao tác đều thành công
+                                    transaction.Commit();
+                                    MessageBox.Show("Thêm log và cập nhật tồn kho thành công!");
+                                    LoadInventoryLogs(); // Tải lại dữ liệu để cập nhật DataGridView
+                                }
+                                else
+                                {
+                                    throw new Exception("Không thể cập nhật tồn kho.");
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception("Không thể thêm log. Vui lòng thử lại.");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Rollback giao dịch nếu có lỗi
+                            transaction.Rollback();
+                            MessageBox.Show("Lỗi khi thực hiện thao tác: " + ex.Message);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                nudSafetyThreshold.Value = nudSafetyThreshold.Minimum; // Hoặc đặt về 0
+                MessageBox.Show("Lỗi khi thêm log: " + ex.Message);
             }
-
-            // Đưa con trỏ chuột về TextBox đầu tiên
-            if (txtItemName != null)
-                txtItemName.Focus();
         }
 
         private void btnAddNewitem_Click(object sender, EventArgs e)
         {
-            string itemName = txtItemName.Text;
-            int currentQty = (int)nudCurrentQuantity.Value;
-            int safetyQty = (int)nudSafetyThreshold.Value;
+            try
+            {
+                string itemName = txtItemName.Text.Trim();
+                int currentStock = Convert.ToInt32(CurrentStock_txt.Text);
+                int safeThreshold = Convert.ToInt32(SafeThreshold_txt.Text);
 
-            dataGridView1.Rows.Add(itemName, currentQty, safetyQty, currentQty < safetyQty ? "Thiếu" : "Đủ");
-            MessageBox.Show("Thêm hàng hóa thành công!", "Thông báo");
-            ResetInputFields();
+                if (string.IsNullOrEmpty(itemName) || currentStock < 0 || safeThreshold < 0)
+                {
+                    MessageBox.Show("Vui lòng nhập đầy đủ và đúng thông tin.");
+                    return;
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "INSERT INTO Inventory (ItemName, CurrentStock, SafeThreshold) VALUES (@ItemName, @CurrentStock, @SafeThreshold)";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@ItemName", itemName);
+                    cmd.Parameters.AddWithValue("@CurrentStock", currentStock);
+                    cmd.Parameters.AddWithValue("@SafeThreshold", safeThreshold);
+
+                    int rowsAffected = cmd.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show("Thêm hàng hóa mới thành công!");
+                        LoadInventory(); // Tải lại dữ liệu sau khi thêm
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không thể thêm hàng hóa. Vui lòng thử lại.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi thêm hàng hóa: " + ex.Message);
+            }
         }
 
-        private void btnUpdate_Click(object sender, EventArgs e)
+        private void Reload_btn_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count > 0)
-            {
-                var row = dataGridView1.SelectedRows[0];
-                row.Cells[0].Value = txtItemName.Text;
-                row.Cells[1].Value = nudCurrentQuantity.Value;
-                row.Cells[2].Value = nudSafetyThreshold.Value;
-                row.Cells[3].Value = (int)nudCurrentQuantity.Value < (int)nudSafetyThreshold.Value ? "Thiếu" : "Đủ";
+            LoadInventoryData();
+        }
 
-                MessageBox.Show("Cập nhật hàng hóa thành công!", "Thông báo");
-                ResetInputFields();
-            }
-            else
+        private void searchCurrent_btn_Click(object sender, EventArgs e)
+        {
+            try
             {
-                MessageBox.Show("Vui lòng chọn một hàng để cập nhật!", "Lỗi");
+                string searchKeyword = txtItemName.Text.Trim();
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "SELECT ItemID, ItemName, CurrentStock, SafeThreshold FROM Inventory WHERE ItemName LIKE @SearchKeyword";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@SearchKeyword", "%" + searchKeyword + "%");
+
+                    SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    // Kiểm tra xem DataTable có dữ liệu hay không
+                    if (dt.Rows.Count > 0)
+                    {
+                        // Hiển thị dữ liệu trong DataGridView
+                        Inventory_DGV.DataSource = dt;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không tìm thấy kết quả.");
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tìm kiếm: " + ex.Message);
+            }
+        }
+
+        private void inventoryLog_DGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void Inventory_DGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

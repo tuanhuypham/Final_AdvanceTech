@@ -12,7 +12,7 @@ namespace Final_AdvanceTech.Services
 {
     public class OrderService
     {
-        private string connectionString = "Data Source=LAPTOP-95AQ4INV\\SQLEXPRESS;Initial Catalog=Resaurant_system;Integrated Security=True;";
+        private string connectionString = "Data Source=LAPTOP-HK44U3IK;Initial Catalog=Resaurant_system;Integrated Security=True;TrustServerCertificate=True;";
         public int CreateOrder(Orders order)
         {
             int orderId = 0;

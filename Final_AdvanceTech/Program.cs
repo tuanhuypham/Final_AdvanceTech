@@ -16,7 +16,7 @@ namespace Final_AdvanceTech
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new TableService());
+            Application.Run(new LoginForm());
         }
     }
 }
